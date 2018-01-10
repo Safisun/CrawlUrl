@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # author:Safi
-# 根据数据库url爬取html页面相关内容
+# 根据数据库表中或者url爬取html页面相关内容
 
 from selenium import webdriver
 from bs4 import BeautifulSoup
@@ -10,7 +10,7 @@ import os
 from urllib import request
 
 
-def get_href_by_url(url):
+def get_img_by_url(url):
     """
     京东sku
     :return:
@@ -36,7 +36,17 @@ def get_href_by_url(url):
         driver.quit()
 
         soup = BeautifulSoup(html, 'html.parser')
-
+        main_img_arr = soup.select('[id=spec-list] img')
+        main_path = '{}{}{}'.format(file_path, os.sep, 'main')
+        for main_img in main_img_arr:
+            if main_img.get('src'):
+                m_img_src = main_img.get('src').replace('75x75', '450x450')
+                if 'https' in m_img_src or 'http' in m_img_src:
+                    m_img_src = m_img_src
+                else:
+                    m_img_src = 'https:' + m_img_src
+                file_name = os.path.basename(m_img_src)
+                save_img(m_img_src, file_name, main_path)
         img_arr = soup.select("[id=J-detail-content] img")
         for img in img_arr:
             if img.get('src'):
@@ -148,44 +158,44 @@ def get_href_by_url():
 
 
 if __name__ == '__main__':
-    get_href_by_url("https://item.jd.hk/2289449.html")
-    get_href_by_url("https://item.jd.hk/2355514.html")
-    get_href_by_url("https://item.jd.hk/2289451.html")
-    get_href_by_url("https://item.jd.hk/2622752.html")
-    get_href_by_url("http://item.jd.hk/1938922.html")
-    get_href_by_url("https://item.jd.hk/2366129.html")
-    get_href_by_url("https://item.jd.hk/1926187.html")
-    get_href_by_url("https://item.jd.hk/2366119.html")
-    get_href_by_url("https://item.jd.hk/2356463.html")
-    get_href_by_url("https://item.jd.hk/2123768.html")
-    get_href_by_url("http://item.jd.hk/2356469.html")
+    get_img_by_url("https://item.jd.hk/2289449.html")
+    get_img_by_url("https://item.jd.hk/2355514.html")
+    get_img_by_url("https://item.jd.hk/2289451.html")
+    get_img_by_url("https://item.jd.hk/2622752.html")
+    get_img_by_url("http://item.jd.hk/1938922.html")
+    get_img_by_url("https://item.jd.hk/2366129.html")
+    get_img_by_url("https://item.jd.hk/1926187.html")
+    get_img_by_url("https://item.jd.hk/2366119.html")
+    get_img_by_url("https://item.jd.hk/2356463.html")
+    get_img_by_url("https://item.jd.hk/2123768.html")
+    get_img_by_url("http://item.jd.hk/2356469.html")
 
-    get_href_by_url("https://item.jd.hk/2451575.html")
-    get_href_by_url("http://item.jd.hk/2481303.html")
-    get_href_by_url("https://item.jd.hk/2288508.html")
-    get_href_by_url("https://item.jd.hk/1938923.html")
-    get_href_by_url("http://item.jd.hk/2289457.html")
-    get_href_by_url("https://item.jd.hk/2288506.html")
-    get_href_by_url("https://item.jd.hk/2608225.html")
-    get_href_by_url("https://item.jd.hk/2622474.html")
-    get_href_by_url("http://item.jd.hk/2656316.html")
-    get_href_by_url("https://item.jd.hk/2356461.html")
-    get_href_by_url("http://item.jd.hk/2365174.html")
-    get_href_by_url("http://item.jd.hk/2365264.html")
-    get_href_by_url("https://item.jd.hk/2365252.html")
-    get_href_by_url("https://item.jd.hk/2356465.html")
-    get_href_by_url("https://item.jd.hk/2365188.html")
-    get_href_by_url("https://item.jd.hk/3516276.html")
-    get_href_by_url("https://item.jd.hk/3516222.html")
-    get_href_by_url("http://item.jd.hk/3572010.html")
-    get_href_by_url("https://item.jd.hk/3572036.html")
-    get_href_by_url("https://item.jd.hk/3562384.html")
-    get_href_by_url("https://item.jd.hk/4279152.html")
-    get_href_by_url("https://item.jd.hk/3705503.html")
-    get_href_by_url("https://item.jd.hk/3705549.html")
-    get_href_by_url("http://item.jd.hk/4279176.html")
-    get_href_by_url("https://item.jd.hk/3791179.html")
-    get_href_by_url("https://item.jd.hk/4279190.html")
-    get_href_by_url("https://item.jd.hk/4484113.html")
-    get_href_by_url("https://item.jd.hk/4484111.html")
-    get_href_by_url("https://item.jd.hk/4732245.html")
+    get_img_by_url("https://item.jd.hk/2451575.html")
+    get_img_by_url("http://item.jd.hk/2481303.html")
+    get_img_by_url("https://item.jd.hk/2288508.html")
+    get_img_by_url("https://item.jd.hk/1938923.html")
+    get_img_by_url("http://item.jd.hk/2289457.html")
+    get_img_by_url("https://item.jd.hk/2288506.html")
+    get_img_by_url("https://item.jd.hk/2608225.html")
+    get_img_by_url("https://item.jd.hk/2622474.html")
+    get_img_by_url("http://item.jd.hk/2656316.html")
+    get_img_by_url("https://item.jd.hk/2356461.html")
+    get_img_by_url("http://item.jd.hk/2365174.html")
+    get_img_by_url("http://item.jd.hk/2365264.html")
+    get_img_by_url("https://item.jd.hk/2365252.html")
+    get_img_by_url("https://item.jd.hk/2356465.html")
+    get_img_by_url("https://item.jd.hk/2365188.html")
+    get_img_by_url("https://item.jd.hk/3516276.html")
+    get_img_by_url("https://item.jd.hk/3516222.html")
+    get_img_by_url("http://item.jd.hk/3572010.html")
+    get_img_by_url("https://item.jd.hk/3572036.html")
+    get_img_by_url("https://item.jd.hk/3562384.html")
+    get_img_by_url("https://item.jd.hk/4279152.html")
+    get_img_by_url("https://item.jd.hk/3705503.html")
+    get_img_by_url("https://item.jd.hk/3705549.html")
+    get_img_by_url("http://item.jd.hk/4279176.html")
+    get_img_by_url("https://item.jd.hk/3791179.html")
+    get_img_by_url("https://item.jd.hk/4279190.html")
+    get_img_by_url("https://item.jd.hk/4484113.html")
+    get_img_by_url("https://item.jd.hk/4484111.html")
+    get_img_by_url("https://item.jd.hk/4732245.html")
