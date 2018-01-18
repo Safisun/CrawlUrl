@@ -10,7 +10,7 @@ import os
 from urllib import request
 
 
-def get_img_by_url(url):
+def get_img_by_jd_url(url):
     """
     京东sku
     :return:
@@ -65,6 +65,118 @@ def get_img_by_url(url):
 
     except Exception as e:
         print(e)
+
+
+def get_img_by_kaola_url(sku, url):
+    """
+    考拉sku
+    :return:
+    """
+    driver = webdriver.PhantomJS(executable_path=r'C:\phantomjs-2.1.1-windows\bin\phantomjs.exe', port=0,
+                                 desired_capabilities={'browserName': 'chrome', 'platform': 'windows',
+                                                       'javascriptEnabled': True, 'version': ''}, service_args=None,
+                                 service_log_path=None)
+    try:
+        driver.get(url)
+
+        js = "document.body.scrollTop+=100"
+        height = driver.execute_script("return document.body.scrollHeight")
+        print(height)
+        count = int(height / 100)
+        for i in range(0, count):
+            driver.implicitly_wait(10)
+            time.sleep(1)
+            driver.execute_script(js)
+
+        html = driver.page_source
+        driver.quit()
+
+        soup = BeautifulSoup(html, 'html.parser')
+        file_path = '{}{}{}'.format(os.getcwd(), os.sep, sku)
+        print(file_path)
+
+        main_img_arr = soup.select('[id=litimgUl] img')
+        main_path = '{}{}{}'.format(file_path, os.sep, 'main')
+        for index, main_img in enumerate(main_img_arr):
+            if main_img.get('src'):
+                m_img_src = main_img.get('src').replace('64x0', '800x0')
+                file_suffix = os.path.splitext(m_img_src)[1].split('?')[0]
+                if 'https' in m_img_src or 'http' in m_img_src:
+                    m_img_src = m_img_src
+                else:
+                    m_img_src = 'https:' + m_img_src
+                file_name = "{}{}".format(index + 1, file_suffix)
+                save_img(m_img_src, file_name, main_path)
+        img_arr = soup.select("[id=textareabox] img")
+        for index, img in enumerate(img_arr):
+            if img.get('src'):
+                img_src = img.get('src')
+                file_suffix = os.path.splitext(img_src)[1].split('?')[0]
+                if 'https' in img_src or 'http' in img_src:
+                    img_src = img_src
+                else:
+                    img_src = 'https:' + img_src
+            file_name = "{}{}".format(index + 1, file_suffix).split('?')[0]
+            save_img(img_src, file_name, file_path)
+
+    except Exception as e:
+        print(e)
+
+
+def get_img_by_tmall_url(sku, url):
+    """
+    天猫sku
+    :return:
+    """
+    driver = webdriver.PhantomJS(executable_path=r'C:\phantomjs-2.1.1-windows\bin\phantomjs.exe', port=0,
+                                 desired_capabilities={'browserName': 'chrome', 'platform': 'windows',
+                                                       'javascriptEnabled': True, 'version': ''}, service_args=None,
+                                 service_log_path=None)
+    try:
+        driver.get(url)
+        js = "document.body.scrollTop+=100"
+        height = driver.execute_script("return document.body.scrollHeight")
+        print(height)
+        count = int(height / 100)
+        for i in range(0, count):
+            driver.implicitly_wait(10)
+            time.sleep(1)
+            driver.execute_script(js)
+
+        html = driver.page_source
+        driver.quit()
+        soup = BeautifulSoup(html, 'html.parser')
+        file_path = '{}{}{}'.format(os.getcwd(), os.sep, sku)
+        print(file_path)
+        main_path = '{}{}{}'.format(file_path, os.sep, 'main')
+        main_img_arr = soup.select('[id=J_UlThumb] img')
+        print(len(main_img_arr))
+        for index, img in enumerate(main_img_arr):
+            if img.get('src'):
+                img_src = img.get('src').replace('60x60', '430x430')
+                file_suffix = os.path.splitext(img_src)[1]
+                if 'https' in img_src or 'http' in img_src:
+                    img_src = img_src
+                else:
+                    img_src = 'https:' + img_src
+            file_name = "{}{}".format(index + 1, file_suffix).split('?')[0]
+            save_img(img_src, file_name, main_path)
+        img_arr = soup.select("[id=description] img")
+        print(len(img_arr))
+        for index, img in enumerate(img_arr):
+            if img.get('src'):
+                img_src = img.get('src')
+                file_suffix = os.path.splitext(img_src)[1]
+                if 'https' in img_src or 'http' in img_src:
+                    img_src = img_src
+                else:
+                    img_src = 'https:' + img_src
+            file_name = "{}{}".format(index + 1, file_suffix).split('?')[0]
+            save_img(img_src, file_name, file_path)
+        print(u'结束')
+    except Exception as e:
+        print(u'内部错误')
+        print(e.message)
 
 
 def save_img(img_url, file_name, file_path):
@@ -158,44 +270,7 @@ def get_href_by_url():
 
 
 if __name__ == '__main__':
-    get_img_by_url("https://item.jd.hk/2289449.html")
-    get_img_by_url("https://item.jd.hk/2355514.html")
-    get_img_by_url("https://item.jd.hk/2289451.html")
-    get_img_by_url("https://item.jd.hk/2622752.html")
-    get_img_by_url("http://item.jd.hk/1938922.html")
-    get_img_by_url("https://item.jd.hk/2366129.html")
-    get_img_by_url("https://item.jd.hk/1926187.html")
-    get_img_by_url("https://item.jd.hk/2366119.html")
-    get_img_by_url("https://item.jd.hk/2356463.html")
-    get_img_by_url("https://item.jd.hk/2123768.html")
-    get_img_by_url("http://item.jd.hk/2356469.html")
-
-    get_img_by_url("https://item.jd.hk/2451575.html")
-    get_img_by_url("http://item.jd.hk/2481303.html")
-    get_img_by_url("https://item.jd.hk/2288508.html")
-    get_img_by_url("https://item.jd.hk/1938923.html")
-    get_img_by_url("http://item.jd.hk/2289457.html")
-    get_img_by_url("https://item.jd.hk/2288506.html")
-    get_img_by_url("https://item.jd.hk/2608225.html")
-    get_img_by_url("https://item.jd.hk/2622474.html")
-    get_img_by_url("http://item.jd.hk/2656316.html")
-    get_img_by_url("https://item.jd.hk/2356461.html")
-    get_img_by_url("http://item.jd.hk/2365174.html")
-    get_img_by_url("http://item.jd.hk/2365264.html")
-    get_img_by_url("https://item.jd.hk/2365252.html")
-    get_img_by_url("https://item.jd.hk/2356465.html")
-    get_img_by_url("https://item.jd.hk/2365188.html")
-    get_img_by_url("https://item.jd.hk/3516276.html")
-    get_img_by_url("https://item.jd.hk/3516222.html")
-    get_img_by_url("http://item.jd.hk/3572010.html")
-    get_img_by_url("https://item.jd.hk/3572036.html")
-    get_img_by_url("https://item.jd.hk/3562384.html")
-    get_img_by_url("https://item.jd.hk/4279152.html")
-    get_img_by_url("https://item.jd.hk/3705503.html")
-    get_img_by_url("https://item.jd.hk/3705549.html")
-    get_img_by_url("http://item.jd.hk/4279176.html")
-    get_img_by_url("https://item.jd.hk/3791179.html")
-    get_img_by_url("https://item.jd.hk/4279190.html")
-    get_img_by_url("https://item.jd.hk/4484113.html")
-    get_img_by_url("https://item.jd.hk/4484111.html")
-    get_img_by_url("https://item.jd.hk/4732245.html")
+    get_img_by_tmall_url('5111804',
+                         'https://detail.tmall.hk/hk/item.htm?spm=a1z10.5-b-s.w4011-17375697126.40.RVMYJo&id=560736321825&rn=20c384ef585885c70ba34e410ec27360&abbucket=13')
+    get_img_by_tmall_url('5111805',
+                         'https://detail.tmall.hk/hk/item.htm?spm=a1z10.5-b-s.w4011-17375697126.34.RVMYJo&id=559769233971&rn=20c384ef585885c70ba34e410ec27360&abbucket=13&sm=true&smToken=ea01b523938148f6942b24ab2f7b6937&smSign=zU1m1i%20ywn7r5nREhWwnUA==')
